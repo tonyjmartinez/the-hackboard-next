@@ -35,3 +35,5 @@ yarn-error.log*
 
 # docker
 .devcontainer
+# Local Netlify folder
+.netlify

@@ -1,5 +1,5 @@
 // pages/index.js
-import {useQuery} from 'react-query'
+import { useQuery } from "react-query";
 
 const GetPosts = `
   query MyQuery @cached {
@@ -13,15 +13,16 @@ const GetPosts = `
       is_public
     }
   }
-`
+`;
+
 interface PostsType {
-  posts: any[]
+  posts: any[];
 }
 
 export default function Index() {
-  const {status, data, error, isFetching} = useQuery<PostsType | undefined>(
-    GetPosts,
-  )
+  const { status, data, error, isFetching } = useQuery<PostsType | undefined>(
+    GetPosts
+  );
 
-  return <p>{JSON.stringify(data)}</p>
+  return <p>{JSON.stringify(data)}</p>;
 }

@@ -12,12 +12,16 @@ import {
   Tooltip,
   BoxProps,
 } from '@chakra-ui/react'
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {FiSun, FiMoon, FiPlusCircle} from 'react-icons/fi'
 import Link from 'next/link'
 import {useUser} from '@auth0/nextjs-auth0'
 
-const Nav = ({...rest}: BoxProps) => {
+export interface NavProps extends BoxProps {
+  children: ReactNode
+}
+
+const Nav = ({children, ...rest}: NavProps) => {
   const {colorMode, toggleColorMode} = useColorMode()
   const {user, error, isLoading} = useUser()
 
@@ -82,6 +86,7 @@ const Nav = ({...rest}: BoxProps) => {
           />
         </Box>
       </Flex>
+      {children}
     </>
   )
 }

@@ -23,6 +23,5 @@ export default function Index() {
     GetPosts,
   )
 
-  console.log('data', data)
-  return <p>Hello world</p>
+  return <p>{JSON.stringify(data)}</p>
 }

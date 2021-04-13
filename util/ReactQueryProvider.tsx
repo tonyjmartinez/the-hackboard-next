@@ -7,7 +7,6 @@ const endpoint = 'https://the-hackboard.herokuapp.com/v1/graphql'
 export const client = new GraphQLClient(endpoint)
 
 const defaultQueryFn = async ({queryKey}: {queryKey: any}) => {
-  console.log('query', queryKey)
   let data = null
   try {
     data = await client.request(

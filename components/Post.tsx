@@ -8,7 +8,7 @@ import {
   AspectRatio,
 } from '@chakra-ui/react'
 import React from 'react'
-import {useParams} from 'react-router-dom'
+// import {useParams} from 'react-router-dom'
 import {useQuery} from 'react-query'
 import PostContent from './PostContent'
 
@@ -30,12 +30,12 @@ interface ParamType {
 }
 
 const Post = () => {
-  const {id} = useParams<ParamType>()
+  // const {id} = useParams<ParamType>()
 
   const {data, isFetching, error, status} = useQuery<any | undefined>([
     GetPost,
     {
-      id: parseInt(id),
+      // id: parseInt(id),
     },
   ])
 
@@ -46,19 +46,21 @@ const Post = () => {
       {data?.posts?.map(
         ({title, subtitle, post_items, image}: any, idx: number) => {
           return (
-            <Box key={idx} m="auto" mt={20}  textAlign="left">
+            <Box key={idx} m="auto" mt={20} textAlign="left">
               <VStack spacing={7} align="start">
-              <Box w="100%" textAlign="center">
-                {image && (
-                  <Center w="100%">
-                    <AspectRatio ratio={16 / 9} w={['80%', '80%', '60%']}>
-                      <Image src={image} />
-                    </AspectRatio>
-                  </Center>
-                )}
-                <Heading size="2xl" mb={6}>{title}</Heading>
-                <Heading size="md">{subtitle}</Heading>
-              </Box>
+                <Box w="100%" textAlign="center">
+                  {image && (
+                    <Center w="100%">
+                      <AspectRatio ratio={16 / 9} w={['80%', '80%', '60%']}>
+                        <Image src={image} />
+                      </AspectRatio>
+                    </Center>
+                  )}
+                  <Heading size="2xl" mb={6}>
+                    {title}
+                  </Heading>
+                  <Heading size="md">{subtitle}</Heading>
+                </Box>
                 {post_items.length > 0 &&
                   post_items.map((item: any, idx: number) => (
                     <PostContent key={item} itemId={item} />

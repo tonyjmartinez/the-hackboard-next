@@ -4,7 +4,6 @@ import moment from 'moment'
 import {ItemTypes} from '../../util/enums'
 import {List, arrayMove} from 'react-movable'
 import ReactFilestack from 'filestack-react'
-import useRequireAuth from '../../hooks/use-require-auth'
 import Interweave from 'interweave'
 import EditableText from 'components/NewPost/EditableText'
 import NewContent from './NewContent'
@@ -55,9 +54,7 @@ import {
   FiCheckCircle,
   FiX,
 } from 'react-icons/fi'
-import {useAuth0} from '@auth0/auth0-react'
-
-
+// import {useAuth0} from '@auth0/auth0-react'
 
 const InsertItem = `
   mutation ($value: String!, $userid: String!, $type: String!, $is_public: Boolean = false) {
@@ -113,8 +110,6 @@ const StyledBox = ({children}: {children: ReactNode}) => {
   )
 }
 
-
-
 const thumbnail = (url: any) => {
   const parts = url.split('/')
   parts.splice(3, 0, 'resize=width:400')
@@ -135,7 +130,8 @@ interface ItemType {
 }
 
 const NewPost = () => {
-  const {handleSubmit, errors, register} = useForm()
+  // const {handleSubmit, errors, register} = useForm()
+  const {handleSubmit, register} = useForm()
   const [showImageUpload, setShowImageUpload] = useState(false)
   const [postItemIds, setPostItemIds] = useState<number[]>([])
   const [, setSubmittedTextId] = useState(-1)
@@ -147,7 +143,7 @@ const NewPost = () => {
   const [radioValue, setRadioValue] = useState<ReactText>('true')
   const [editing, setEditing] = useState<null | ItemTypes>(null)
   const [markdown, setMarkdown] = useState('')
-  const {user} = useAuth0()
+  // const {user} = useAuth0()
   const buttonColor = useColorModeValue('gray', 'blue')
 
   const {data: insertItemResult, mutate: insertItem} = itemMutation
@@ -158,7 +154,7 @@ const NewPost = () => {
     isLoading: insertPostLoading,
   } = postMutation
 
-  const auth = useRequireAuth()
+  // const auth = useRequireAuth()
 
   const onFileUpload = (response: any) => {
     sendItem(thumbnail(response.filesUploaded[0].url), ItemTypes.Image)
@@ -204,12 +200,12 @@ const NewPost = () => {
     }
   }, [updateItemResult])
 
-  if (!auth) return <div>Loading...</div>
+  // if (!auth) return <div>Loading...</div>
 
   const sendItem = (value: string, type: string) => {
     insertItem({
       value,
-      userid: user.sub,
+      // userid: user.sub,
       type,
       is_public: radioValue === 'true',
     })
@@ -231,7 +227,7 @@ const NewPost = () => {
     insertPost({
       title,
       subtitle,
-      user_id: user.sub,
+      // user_id: user.sub,
       post_items: postItemIds,
       created_at: moment(),
       image: url,
@@ -335,7 +331,7 @@ const NewPost = () => {
   return (
     <Container pb={10}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl isInvalid={errors.title} marginY={3}>
+        <FormControl marginY={3}>
           <HStack>
             <Heading m={6}>New Post</Heading>
             <Spacer />
@@ -354,14 +350,14 @@ const NewPost = () => {
           <Input
             name="title"
             placeholder="title"
-            ref={register({validate: validateTitle})}
+            // ref={register({validate: validateTitle})}
             mb={3}
             autoComplete="off"
           />
 
-          <FormErrorMessage>
+          {/* <FormErrorMessage>
             {errors.title && errors.title.message}
-          </FormErrorMessage>
+          </FormErrorMessage> */}
         </FormControl>
 
         <FormLabel htmlFor="coverImage">Cover Image</FormLabel>
@@ -400,12 +396,12 @@ const NewPost = () => {
             </TabPanel>
           </TabPanels>
         </Tabs>
-        <FormControl isInvalid={errors.title} marginY={3}>
+        <FormControl marginY={3}>
           <FormLabel htmlFor="subtitle">Subtitle</FormLabel>
           <Input
             name="subtitle"
             placeholder="subtitle"
-            ref={register({validate: validateTitle})}
+            // ref={register({validate: validateTitle})}
             autoComplete="off"
           />
         </FormControl>
@@ -479,7 +475,7 @@ const NewPost = () => {
       {showImageUpload && <ImageUploader />}
 
       <Heading m={6}>Add Content</Heading>
-      <NewContent setEditing={setEditing}/>
+      <NewContent setEditing={setEditing} />
     </Container>
   )
 }

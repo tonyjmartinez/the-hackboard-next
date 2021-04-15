@@ -11,6 +11,7 @@ import {
   useColorModeValue,
   Tooltip,
   BoxProps,
+  Portal,
 } from '@chakra-ui/react'
 import React, {ReactNode} from 'react'
 import {FiSun, FiMoon, FiPlusCircle} from 'react-icons/fi'
@@ -34,58 +35,62 @@ const Nav = ({children, ...rest}: NavProps) => {
 
   return (
     <>
-      <Flex w="100%" pos="fixed" {...rest}>
-        <Box bg="gray.600" opacity="0.8">
-          <Heading size="md" p={3} color="white">
-            <Link href="/">The Hackboard</Link>
-          </Heading>
-        </Box>
-      </Flex>
-      <Flex w="100%" pos="fixed" bottom="0" {...rest}>
-        <Spacer />
-        <Box px={2} bg="gray.600" opacity="0.8" mr={6}>
-          {user ? (
-            <>
-              <Link href="/new">
-                <Tooltip label="New Post">
-                  <IconButton
-                    colorScheme={buttonIconColor}
-                    aria-label="new post"
-                    variant="solid"
-                    icon={<FiPlusCircle size={30} color={iconColor} />}
-                  />
-                </Tooltip>
-              </Link>
+      <Portal>
+        <Flex w="100%" pos="fixed" top={0} {...rest}>
+          <Box bg="gray.600" opacity="0.8">
+            <Heading size="md" p={3} color="white">
+              <Link href="/">The Hackboard</Link>
+            </Heading>
+          </Box>
+        </Flex>
+      </Portal>
+      <Portal>
+        <Flex w="100%" pos="fixed" bottom="0" {...rest}>
+          <Spacer />
+          <Box px={2} bg="gray.600" opacity="0.8" mr={6}>
+            {user ? (
+              <>
+                <Link href="/new">
+                  <Tooltip label="New Post">
+                    <IconButton
+                      colorScheme={buttonIconColor}
+                      aria-label="new post"
+                      variant="solid"
+                      icon={<FiPlusCircle size={30} color={iconColor} />}
+                    />
+                  </Tooltip>
+                </Link>
 
-              <Link href="api/auth/logout">
+                <Link href="api/auth/logout">
+                  <Button m={3} colorScheme="teal">
+                    Logout
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <Link href="api/auth/login">
                 <Button m={3} colorScheme="teal">
-                  Logout
+                  Login
                 </Button>
               </Link>
-            </>
-          ) : (
-            <Link href="api/auth/login">
-              <Button m={3} colorScheme="teal">
-                Login
-              </Button>
-            </Link>
-          )}
+            )}
 
-          <IconButton
-            onClick={toggleColorMode}
-            colorScheme={buttonIconColor}
-            aria-label="Dark Mode toggle"
-            mr={3}
-            icon={
-              isLight ? (
-                <FiMoon size={30} color={iconColor} />
-              ) : (
-                <FiSun size={30} color={iconColor} />
-              )
-            }
-          />
-        </Box>
-      </Flex>
+            <IconButton
+              onClick={toggleColorMode}
+              colorScheme={buttonIconColor}
+              aria-label="Dark Mode toggle"
+              mr={3}
+              icon={
+                isLight ? (
+                  <FiMoon size={30} color={iconColor} />
+                ) : (
+                  <FiSun size={30} color={iconColor} />
+                )
+              }
+            />
+          </Box>
+        </Flex>
+      </Portal>
       {children}
     </>
   )

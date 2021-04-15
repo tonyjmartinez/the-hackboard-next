@@ -58,13 +58,9 @@ const Nav = ({children}: NavProps) => {
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>{error.message}</div>
 
-  if (user) {
-    return (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    )
-  }
-
-  return <>{children}</>
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  )
 }
 
 export default Nav

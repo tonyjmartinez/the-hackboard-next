@@ -1,10 +1,22 @@
+import {useRef} from 'react'
 import {useUser} from '@auth0/nextjs-auth0'
 import {ReactNode, useEffect, useState} from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
+import {Hydrate} from 'react-query/hydration'
 import {gql, GraphQLClient} from 'graphql-request'
 
 const endpoint = 'https://the-hackboard.herokuapp.com/v1/graphql'
 export const client = new GraphQLClient(endpoint)
+
+export const graphqlRequest = (query: string) => {
+  return async () => {
+    try {
+      return await client.request(query)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+}
 
 const defaultQueryFn = async ({queryKey}: {queryKey: any}) => {
   let data = null
@@ -22,20 +34,25 @@ const defaultQueryFn = async ({queryKey}: {queryKey: any}) => {
   return data
 }
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      queryFn: defaultQueryFn,
-    },
-  },
-})
-
 export type NavProps = {
   children: ReactNode
+  pageProps: any
 }
-const Nav = ({children}: NavProps) => {
+const ReactQueryProvider = ({children, pageProps}: NavProps) => {
   const {user, error, isLoading} = useUser()
   const [accessToken, setAccessToken] = useState<string>('')
+
+  const queryClientRef = useRef<QueryClient>()
+  if (!queryClientRef.current) {
+    queryClientRef.current = new QueryClient()
+    // queryClientRef.current = new QueryClient({
+    //   defaultOptions: {
+    //     queries: {
+    //       queryFn: defaultQueryFn,
+    //     },
+    //   },
+    // })
+  }
 
   useEffect(() => {
     if (user) {
@@ -59,8 +76,10 @@ const Nav = ({children}: NavProps) => {
   if (error) return <div>{error.message}</div>
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClientRef.current}>
+      <Hydrate state={pageProps.dehydratedState}>{children}</Hydrate>
+    </QueryClientProvider>
   )
 }
 
-export default Nav
+export default ReactQueryProvider

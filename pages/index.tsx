@@ -1,4 +1,6 @@
-import {useQuery} from 'react-query'
+import {QueryClient, useQuery} from 'react-query'
+import {dehydrate} from 'react-query/hydration'
+import {graphqlRequest} from 'util/ReactQueryProvider'
 import {Box, useMediaQuery, Center} from '@chakra-ui/react'
 import Link from 'next/link'
 import Skeleton from 'components/Skeleton'
@@ -6,7 +8,7 @@ import {FixedSizeList as List} from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import Card from 'components/Card'
 
-const GetPosts = `
+const getPosts = `
   query MyQuery @cached {
     posts(order_by: {created_at: desc}) {
       id
@@ -32,9 +34,22 @@ interface PostsType {
   posts: any[]
 }
 
+export async function getStaticProps() {
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery('posts', graphqlRequest(getPosts))
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  }
+}
+
 const Index = () => {
   const {status, data, error, isFetching} = useQuery<PostsType | undefined>(
-    GetPosts,
+    'posts',
+    graphqlRequest(getPosts),
   )
 
   const [sm, md, lg] = useMediaQuery([

@@ -3,7 +3,6 @@ import {useEffect, useState, ReactText, ReactNode} from 'react'
 import moment from 'moment'
 import {ItemTypes} from '../../util/enums'
 import {List, arrayMove} from 'react-movable'
-import ReactFilestack from 'filestack-react'
 import Interweave from 'interweave'
 import EditableText from 'components/NewPost/EditableText'
 import NewContent from './NewContent'
@@ -239,26 +238,6 @@ const NewPost = () => {
     sendItem(text, ItemTypes.Text)
   }
 
-  const ImageUploader = () => {
-    return (
-      <>
-        <ReactFilestack
-          apikey={`${process.env.REACT_APP_FILESTACK_KEY}`}
-          componentDisplayMode={{type: 'immediate'}}
-          customRender={({onPick}: any) => (
-            <Button onClick={onPick}>Upload</Button>
-          )}
-          actionOptions={{
-            accept: 'image/*',
-            allowManualRetry: true,
-            fromSources: ['local_file_system'],
-          }}
-          onSuccess={onFileUpload}
-        />
-      </>
-    )
-  }
-
   const renderEditingComponent = (editing: any) => {
     switch (editing) {
       case ItemTypes.Text:
@@ -289,37 +268,13 @@ const NewPost = () => {
         return (
           <>
             <FormLabel mb={6}>Image Content</FormLabel>
-            <Tabs variant="soft-rounded" colorScheme="teal">
-              <TabList>
-                <Tab>Image URL</Tab>
-                <Tab>Upload Image</Tab>
-              </TabList>
-              <TabPanels>
-                <TabPanel>
-                  <EditableText
-                    onTextSubmit={onUrlSubmit}
-                    textValue=""
-                    isEditing
-                    singleLine
-                  />
-                </TabPanel>
-                <TabPanel>
-                  <ReactFilestack
-                    apikey={`${process.env.REACT_APP_FILESTACK_KEY}`}
-                    componentDisplayMode={{type: 'immediate'}}
-                    customRender={({onPick}: any) => (
-                      <Button onClick={onPick}>Select Cover Image</Button>
-                    )}
-                    actionOptions={{
-                      accept: 'image/*',
-                      allowManualRetry: true,
-                      fromSources: ['local_file_system'],
-                    }}
-                    onSuccess={onFileUpload}
-                  />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
+
+            <EditableText
+              onTextSubmit={onUrlSubmit}
+              textValue=""
+              isEditing
+              singleLine
+            />
           </>
         )
 
@@ -361,41 +316,14 @@ const NewPost = () => {
         </FormControl>
 
         <FormLabel htmlFor="coverImage">Cover Image</FormLabel>
-        <Tabs
-          variant="soft-rounded"
-          colorScheme={buttonColor}
-          name="coverImage"
-        >
-          <TabList>
-            <Tab>Image URL</Tab>
-            <Tab>Upload Image</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <Input
-                placeholder="Image URL"
-                autoComplete="off"
-                onChange={e => setUrl(e.target.value)}
-                name="imageurl"
-              />
-            </TabPanel>
-            <TabPanel>
-              <ReactFilestack
-                apikey={`${process.env.REACT_APP_FILESTACK_KEY}`}
-                componentDisplayMode={{type: 'immediate'}}
-                customRender={({onPick}: any) => (
-                  <Button onClick={onPick}>Select Cover Image</Button>
-                )}
-                actionOptions={{
-                  accept: 'image/*',
-                  allowManualRetry: true,
-                  fromSources: ['local_file_system'],
-                }}
-                onSuccess={onSelectCoverImage}
-              />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+
+        <Input
+          placeholder="Image URL"
+          autoComplete="off"
+          onChange={e => setUrl(e.target.value)}
+          name="imageurl"
+        />
+
         <FormControl marginY={3}>
           <FormLabel htmlFor="subtitle">Subtitle</FormLabel>
           <Input
@@ -471,9 +399,6 @@ const NewPost = () => {
           {renderEditingComponent(editing)}
         </StyledBox>
       )}
-
-      {showImageUpload && <ImageUploader />}
-
       <Heading m={6}>Add Content</Heading>
       <NewContent setEditing={setEditing} />
     </Container>

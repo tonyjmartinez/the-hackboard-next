@@ -1,7 +1,8 @@
 import React from 'react'
-import {Box, Img as Image, AspectRatio, Badge, BoxProps} from '@chakra-ui/react'
+import {Box, AspectRatio, Badge, BoxProps} from '@chakra-ui/react'
 import Link from 'next/link'
 import moment from 'moment'
+import Image from 'next/image'
 // Sample card from Airbnb
 
 export interface CardProps extends BoxProps {
@@ -30,7 +31,12 @@ const Card = ({
         cursor="pointer"
       >
         <AspectRatio ratio={16 / 9}>
-          <Image src={imageUrl} alt={'post image'} />
+          <Image
+            src={imageUrl}
+            alt={'post image'}
+            layout="fill"
+            objectFit="cover"
+          />
         </AspectRatio>
 
         <Box p="6">

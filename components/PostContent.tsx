@@ -1,9 +1,9 @@
-import React from 'react'
 import {useQuery} from 'react-query'
 import {ItemTypes} from '../util/enums'
-import {Text, Image, AspectRatio} from '@chakra-ui/react'
+import {Text, AspectRatio} from '@chakra-ui/react'
 import Skeleton from './Skeleton'
 import Interweave from 'interweave'
+import Image from 'next/image'
 
 export const GetItem = `
   query MyQuery($id: Int) {
@@ -40,7 +40,7 @@ const PostContent = ({itemId}: PostContentProps) => {
     case ItemTypes.Image:
       return (
         <AspectRatio ratio={16 / 9} w={['80%', '80%', '60%']}>
-          <Image src={value} />
+          <Image src={value} layout="fill" objectFit="cover" />
         </AspectRatio>
       )
     case ItemTypes.Markdown:

@@ -8,10 +8,10 @@ import {gql, GraphQLClient} from 'graphql-request'
 const endpoint = 'https://the-hackboard.herokuapp.com/v1/graphql'
 export const client = new GraphQLClient(endpoint)
 
-export const graphqlRequest = (query: string) => {
+export const graphqlRequest = (query: string, vars?: any) => {
   return async () => {
     try {
-      return await client.request(query)
+      return await client.request(query, vars)
     } catch (err) {
       console.error(err)
     }

@@ -2,7 +2,6 @@ import {QueryClient, useQuery} from 'react-query'
 import {dehydrate} from 'react-query/hydration'
 import {graphqlRequest} from 'util/ReactQueryProvider'
 import {Box, useMediaQuery, Center} from '@chakra-ui/react'
-import Link from 'next/link'
 import Skeleton from 'components/Skeleton'
 import {FixedSizeList as List} from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -81,15 +80,14 @@ const Index = () => {
       <Box sx={{...style}} key={id}>
         <Center h="100%">
           <Box w={['90%', '70%', '40%']} margin="0px auto">
-            {/* <Link to={`/posts/${id}`}> */}
             <Card
               title={title}
               subtitle={subtitle}
               key={id}
               createdAt={created_at}
               imageUrl={image ? image : undefined}
+              linkUrl={`/posts/${id}`}
             />
-            {/* </Link> */}
           </Box>
         </Center>
       </Box>

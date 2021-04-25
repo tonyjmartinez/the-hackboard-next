@@ -62,10 +62,10 @@ const Post = () => {
   const {id} = router.query
   // TODO: create post type
   const {status, data, error, isFetching} = useQuery<any | undefined>(
-    'post-content',
+    'post-data',
     graphqlRequest(getPost, {id: parseInt(id as string)}),
   )
-  console.log('data?', data)
+  console.log('posts?', data)
   if (isFetching) return <p>Loading...</p>
 
   return (

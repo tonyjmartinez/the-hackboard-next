@@ -2,6 +2,7 @@ import {
   Flex,
   Heading,
   IconButton,
+  Icon,
   Spacer,
   Box,
   Button,
@@ -16,6 +17,7 @@ import {
 import React, {ReactNode} from 'react'
 import {FiSun, FiMoon, FiPlusCircle} from 'react-icons/fi'
 import Link from 'next/link'
+import {useRouter} from 'next/router'
 import {useUser} from '@auth0/nextjs-auth0'
 
 export interface NavProps extends BoxProps {
@@ -23,6 +25,7 @@ export interface NavProps extends BoxProps {
 }
 
 const Nav = ({children, ...rest}: NavProps) => {
+  const router = useRouter()
   const {colorMode, toggleColorMode} = useColorMode()
   const {user, error, isLoading} = useUser()
 
@@ -50,16 +53,17 @@ const Nav = ({children, ...rest}: NavProps) => {
           <Box px={2} bg="gray.600" opacity="0.8" mr={6}>
             {user ? (
               <>
-                <Link href="/new">
-                  <Tooltip label="New Post">
+                <Tooltip label="New Post">
+                  <span>
                     <IconButton
-                      colorScheme={buttonIconColor}
+                      colorScheme="teal"
+                      onClick={e => router.push('/new-post')}
                       aria-label="new post"
                       variant="solid"
-                      icon={<FiPlusCircle size={30} color={iconColor} />}
+                      icon={<FiPlusCircle size={30} />}
                     />
-                  </Tooltip>
-                </Link>
+                  </span>
+                </Tooltip>
 
                 <Link href="api/auth/logout">
                   <Button m={3} colorScheme="teal">
@@ -77,16 +81,10 @@ const Nav = ({children, ...rest}: NavProps) => {
 
             <IconButton
               onClick={toggleColorMode}
-              colorScheme={buttonIconColor}
+              colorScheme="teal"
               aria-label="Dark Mode toggle"
               mr={3}
-              icon={
-                isLight ? (
-                  <FiMoon size={30} color={iconColor} />
-                ) : (
-                  <FiSun size={30} color={iconColor} />
-                )
-              }
+              icon={isLight ? <FiMoon size={30} /> : <FiSun size={30} />}
             />
           </Box>
         </Flex>

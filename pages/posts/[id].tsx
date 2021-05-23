@@ -32,7 +32,7 @@ export async function getStaticProps({params}) {
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery(
-    'post-content',
+    'post-data',
     graphqlRequest(getPost, {id: parseInt(id)}),
   )
 

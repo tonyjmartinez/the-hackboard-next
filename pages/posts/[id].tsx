@@ -26,9 +26,17 @@ const getPost = `
       subtitle
       title
       image
+    }
+  }
+`
+
+const getPostMdx = `
+  query MyQuery($id: Int) {
+    posts(where: {id: {_eq: $id}}) {
       mdx_content
     }
   }
+
 `
 
 export async function getStaticProps({params}) {
@@ -55,8 +63,15 @@ export async function getStaticProps({params}) {
 
   await queryClient.prefetchQuery(
     'post-data',
-    serializeWrapper(getPost, {id: parseInt(id as string)}, graphqlRequest),
+    graphqlRequest(getPost, {id: parseInt(id as string)}),
   )
+
+  const data = await graphqlRequest(getPostMdx, {id: parseInt(id as string)})()
+  let mdxContent = data.posts[0].mdx_content
+  if (mdxContent) {
+    console.log('here')
+    mdxContent = await serialize(mdxContent)
+  }
 
   // let mdxContent = data.posts[0].mdx_content
   // if (mdxContent) {
@@ -71,6 +86,7 @@ export async function getStaticProps({params}) {
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
+      mdxContent,
     },
   }
 }
@@ -89,11 +105,11 @@ export async function getStaticPaths() {
 }
 
 export interface PostProps {
-  postData: any
   mdxContent: any
 }
 
-const Post = () => {
+const Post = ({mdxContent}: PostProps) => {
+  console.log('mdx?', mdxContent)
   const router = useRouter()
   const {id} = router.query
   // TODO: create post type
@@ -132,7 +148,7 @@ const Post = () => {
                   </Heading>
                   <Heading size="md">{subtitle}</Heading>
                 </Box>
-                {/* <MDXRemote {...mdxContent} /> */}
+                <MDXRemote {...mdxContent} />
                 {/* {post_items.length > 0 &&
                   post_items.map((item: any, idx: number) => (
                     <PostContent key={item} itemId={item} />

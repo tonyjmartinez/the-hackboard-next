@@ -33,7 +33,6 @@ const PostContent = ({itemId}: PostContentProps) => {
     return <Skeleton />
   }
   const {type, value} = data?.items[0]
-  console.log('items?', data)
 
   // return <div>{result.data?.items[0].value}</div>;
   switch (type) {

@@ -65,14 +65,22 @@ const Nav = ({children, ...rest}: NavProps) => {
                   </span>
                 </Tooltip>
 
-                <Link href="api/auth/logout">
+                <Link
+                  href={{
+                    pathname: '/api/auth/logout',
+                  }}
+                >
                   <Button m={3} colorScheme="teal">
                     Logout
                   </Button>
                 </Link>
               </>
             ) : (
-              <Link href="api/auth/login">
+              <Link
+                href={{
+                  pathname: '/api/auth/login',
+                }}
+              >
                 <Button m={3} colorScheme="teal">
                   Login
                 </Button>

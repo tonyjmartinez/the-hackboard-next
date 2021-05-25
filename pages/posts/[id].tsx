@@ -1,3 +1,4 @@
+import {useMemo} from 'react'
 import {QueryClient, useQuery} from 'react-query'
 import {useRouter} from 'next/router'
 import {dehydrate} from 'react-query/hydration'
@@ -6,8 +7,10 @@ import React from 'react'
 import {AspectRatio, Box, Center, Heading, VStack} from '@chakra-ui/react'
 import PostContent from 'components/PostContent'
 import Image from 'next/image'
-import {serialize} from 'next-mdx-remote/serialize'
-import {MDXRemote} from 'next-mdx-remote'
+// import {serialize} from 'next-mdx-remote/serialize'
+// import {MDXRemote} from 'next-mdx-remote'
+import {bundleMDX} from 'mdx-bundler'
+import {getMDXComponent} from 'mdx-bundler/client'
 import produce from 'immer'
 
 const getPostIds = `
@@ -43,34 +46,17 @@ export async function getStaticProps({params}) {
   const {id} = params
   const queryClient = new QueryClient()
 
-  const serializeWrapper = (query, vars, request) => {
-    return async () => {
-      const data = await request(query, vars)()
-
-      let mdxContent = data.posts[0].mdx_content
-      if (mdxContent) {
-        console.log('here')
-        mdxContent = await serialize(mdxContent)
-      }
-
-      const dataCopy = produce(data, draft => {
-        draft.posts[0].mdx_content = mdxContent
-      })
-      console.log('data?', data)
-      return dataCopy
-    }
-  }
-
   await queryClient.prefetchQuery(
     'post-data',
     graphqlRequest(getPost, {id: parseInt(id as string)}),
   )
 
   const data = await graphqlRequest(getPostMdx, {id: parseInt(id as string)})()
-  let mdxContent = data.posts[0].mdx_content
-  if (mdxContent) {
+  let mdxContent = null
+  let mdxData = data.posts[0].mdx_content
+  if (mdxData) {
     console.log('here')
-    mdxContent = await serialize(mdxContent)
+    mdxContent = await bundleMDX(mdxData, {})
   }
 
   // let mdxContent = data.posts[0].mdx_content
@@ -86,7 +72,7 @@ export async function getStaticProps({params}) {
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      mdxContent,
+      mdxContent: mdxContent?.code ?? mdxContent,
     },
   }
 }
@@ -118,6 +104,9 @@ const Post = ({mdxContent}: PostProps) => {
     // serializeWrapper(getPost, {id: parseInt(id as string)}, graphqlRequest),
     graphqlRequest(getPost, {id: parseInt(id as string)}),
   )
+
+  // const Component = useMemo(() => getMDXComponent(mdxContent), [mdxContent])
+  const Component = getMDXComponent(mdxContent)
   console.log('used data', data)
 
   // TODO: Write code to save first mdx val - since it's right
@@ -148,7 +137,7 @@ const Post = ({mdxContent}: PostProps) => {
                   </Heading>
                   <Heading size="md">{subtitle}</Heading>
                 </Box>
-                <MDXRemote {...mdxContent} />
+                <Component />
                 {/* {post_items.length > 0 &&
                   post_items.map((item: any, idx: number) => (
                     <PostContent key={item} itemId={item} />

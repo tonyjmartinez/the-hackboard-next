@@ -55,19 +55,8 @@ export async function getStaticProps({params}) {
   let mdxContent = null
   let mdxData = data.posts[0].mdx_content
   if (mdxData) {
-    console.log('here')
     mdxContent = await bundleMDX(mdxData, {})
   }
-
-  // let mdxContent = data.posts[0].mdx_content
-  // if (mdxContent) {
-  //   console.log('here')
-  //   mdxContent = await serialize(mdxContent)
-  // }
-
-  // const dataCopy = produce(data, draft => {
-  //   draft.posts[0].mdx_content = mdxContent
-  // })
 
   return {
     props: {
@@ -95,7 +84,6 @@ export interface PostProps {
 }
 
 const Post = ({mdxContent}: PostProps) => {
-  console.log('mdx?', mdxContent)
   const router = useRouter()
   const {id} = router.query
   // TODO: create post type
@@ -107,7 +95,6 @@ const Post = ({mdxContent}: PostProps) => {
 
   // const Component = useMemo(() => getMDXComponent(mdxContent), [mdxContent])
   const Component = getMDXComponent(mdxContent)
-  console.log('used data', data)
 
   // TODO: Write code to save first mdx val - since it's right
   // maybe a useEffect or something

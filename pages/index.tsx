@@ -9,6 +9,7 @@ import {useVirtual} from 'react-virtual'
 import fs from 'fs'
 import path from 'path'
 import {bundleMDX} from 'mdx-bundler'
+import R from 'ramda'
 
 const {readdir, readFile} = fs.promises
 
@@ -44,17 +45,18 @@ export async function getStaticProps() {
   await queryClient.prefetchQuery('posts', graphqlRequest(getPosts))
   // const files = await readdir(path.join(__dirname, '/posts/'))
   const files = await readdir('mdx/')
-  console.log('files', files)
   const promises = files.map(async file => {
     const fileRes = await readFile(path.join('mdx/', file))
     const result = await bundleMDX(fileRes.toString().trim())
-    console.log('result', result.frontmatter)
+    const {frontmatter} = result
+    const {publishedAt, slug} = frontmatter
 
-    return [{file, content: fileRes.toString().trim()}]
+    return {file, publishedAt, slug}
   })
 
   const result = await Promise.all([...promises])
-  console.log('result', result)
+  const publishedDesc = (a, b) => b.publishedAt - a.publishedAt
+  const sorted = R.sort(publishedDesc, result)
 
   return {
     props: {
@@ -79,7 +81,6 @@ const Index = () => {
 
   const parentRef = useRef()
 
-  console.log('length?', posts.length)
   const rowVirtualizer = useVirtual({
     size: posts.length,
     parentRef,
@@ -93,7 +94,6 @@ const Index = () => {
   const Row = ({index, style}: any) => {
     if (!posts || !posts[index]) return null
     const {title, subtitle, id, image, created_at} = posts[index]
-    console.log(posts[index])
 
     return (
       <Box sx={{...style}} key={id}>
@@ -113,7 +113,6 @@ const Index = () => {
     )
   }
 
-  console.log('items', rowVirtualizer.virtualItems)
   return (
     <Box
       ref={parentRef}

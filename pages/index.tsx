@@ -72,14 +72,14 @@ export interface IndexProps {
   localPosts: any[]
 }
 const Index = ({localPosts}) => {
-  const {status, data, error, isFetching} = useQuery<PostsType | undefined>(
-    'posts',
-    graphqlRequest(getPosts),
-  )
+  // const {status, data, error, isFetching} = useQuery<PostsType | undefined>(
+  //   'posts',
+  //   graphqlRequest(getPosts),
+  // )
 
   console.log('localposts', localPosts)
 
-  const posts = data?.posts
+  // const posts = data?.posts
 
   const [sm, md, lg] = useMediaQuery([
     '(min-width: 0em)',
@@ -90,30 +90,30 @@ const Index = ({localPosts}) => {
   const parentRef = useRef()
 
   const rowVirtualizer = useVirtual({
-    size: posts.length,
+    size: localPosts.length,
     parentRef,
     estimateSize: useCallback(() => 350, []),
   })
 
-  if (isFetching || !data || !(data?.posts.length > 0)) {
-    return <Skeleton />
-  }
+  // if (isFetching || !data || !(data?.posts.length > 0)) {
+  //   return <Skeleton />
+  // }
 
   const Row = ({index, style}: any) => {
-    if (!posts || !posts[index]) return null
-    const {title, subtitle, id, image, created_at} = posts[index]
+    if (!localPosts || !localPosts[index]) return null
+    const {title, description, publishedAt, slug} = localPosts[index]
 
     return (
-      <Box sx={{...style}} key={id}>
+      <Box sx={{...style}} key={slug}>
         <Center h="100%">
           <Box w={['90%', '70%', '40%']} margin="0px auto">
             <Card
               title={title}
-              subtitle={subtitle}
-              key={id}
-              createdAt={created_at}
-              imageUrl={image ? image : undefined}
-              linkUrl={`/posts/${id}`}
+              subtitle={description}
+              createdAt={publishedAt}
+              // imageUrl={image ? image : undefined}
+              // linkUrl={`/posts/${id}`}
+              linkUrl="/test"
             />
           </Box>
         </Center>

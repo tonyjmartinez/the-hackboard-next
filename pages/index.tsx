@@ -112,7 +112,7 @@ const Index = ({localPosts}) => {
               createdAt={publishedAt}
               // imageUrl={image ? image : undefined}
               // linkUrl={`/posts/${id}`}
-              linkUrl="/posts/test-post"
+              linkUrl={`/posts/${slug}`}
             />
           </Box>
         </Center>

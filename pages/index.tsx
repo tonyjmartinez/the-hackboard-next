@@ -49,9 +49,11 @@ export async function getStaticProps() {
     const fileRes = await readFile(path.join('mdx/', file))
     const result = await bundleMDX(fileRes.toString().trim())
     const {frontmatter} = result
-    const {publishedAt, slug} = frontmatter
+    const {publishedAt, modifiedAt} = frontmatter
+    frontmatter.publishedAt = JSON.parse(JSON.stringify(publishedAt))
+    frontmatter.modifiedAt = JSON.parse(JSON.stringify(modifiedAt))
 
-    return {file, publishedAt, slug}
+    return {file, ...frontmatter}
   })
 
   const result = await Promise.all([...promises])
@@ -61,15 +63,21 @@ export async function getStaticProps() {
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
+      localPosts: sorted,
     },
   }
 }
 
-const Index = () => {
+export interface IndexProps {
+  localPosts: any[]
+}
+const Index = ({localPosts}) => {
   const {status, data, error, isFetching} = useQuery<PostsType | undefined>(
     'posts',
     graphqlRequest(getPosts),
   )
+
+  console.log('localposts', localPosts)
 
   const posts = data?.posts
 

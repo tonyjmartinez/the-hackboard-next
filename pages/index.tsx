@@ -9,6 +9,7 @@ import {useVirtual} from 'react-virtual'
 import fs from 'fs'
 import path from 'path'
 import {bundleMDX} from 'mdx-bundler'
+import {mdxFiles} from './posts/[slug]'
 import R from 'ramda'
 
 const {readdir, readFile} = fs.promises
@@ -47,7 +48,7 @@ export async function getStaticProps() {
   const files = await readdir('mdx/')
   const promises = files.map(async file => {
     const fileRes = await readFile(path.join('mdx/', file))
-    const result = await bundleMDX(fileRes.toString().trim())
+    const result = await bundleMDX(fileRes.toString().trim(), mdxFiles)
     const {frontmatter} = result
     const {publishedAt, modifiedAt} = frontmatter
     frontmatter.publishedAt = JSON.parse(JSON.stringify(publishedAt))
@@ -76,8 +77,6 @@ const Index = ({localPosts}) => {
   //   'posts',
   //   graphqlRequest(getPosts),
   // )
-
-  console.log('localposts', localPosts)
 
   // const posts = data?.posts
 
@@ -113,7 +112,7 @@ const Index = ({localPosts}) => {
               createdAt={publishedAt}
               // imageUrl={image ? image : undefined}
               // linkUrl={`/posts/${id}`}
-              linkUrl="/test"
+              linkUrl="/posts/test-post"
             />
           </Box>
         </Center>

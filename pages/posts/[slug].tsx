@@ -4,7 +4,16 @@ import {useRouter} from 'next/router'
 import {dehydrate} from 'react-query/hydration'
 import {graphqlRequest} from 'util/ReactQueryProvider'
 import React from 'react'
-import {AspectRatio, Box, Center, Heading, VStack} from '@chakra-ui/react'
+import {
+  Button,
+  AspectRatio,
+  Box,
+  Text,
+  Center,
+  Heading,
+  VStack,
+} from '@chakra-ui/react'
+
 import PostContent from 'components/PostContent'
 import Image from 'next/image'
 // import {serialize} from 'next-mdx-remote/serialize'
@@ -18,6 +27,15 @@ import R from 'ramda'
 
 const {readdir, readFile} = fs.promises
 
+const Paragraph = ({children}) => {
+  console.log('para')
+  return (
+    <Text color="tomato" size="xl">
+      {children}
+    </Text>
+  )
+}
+
 export const mdxFiles = {
   files: {
     './demo.tsx': `
@@ -30,6 +48,7 @@ export const mdxFiles = {
     export default Demo
         `,
   },
+  globals: {button: 'button', p: 'p'},
 }
 
 export const serialize = ({
@@ -158,7 +177,11 @@ const Post = ({code, title, description, slug}: PostProps) => {
   // )
 
   // const Component = useMemo(() => getMDXComponent(code), [code])
-  const Component = getMDXComponent(code)
+
+  const Component = useMemo(
+    () => getMDXComponent(code, {button: Button}),
+    [code, Button, Paragraph],
+  )
 
   // TODO: Write code to save first mdx val - since it's right
   // maybe a useEffect or something
@@ -192,7 +215,7 @@ const Post = ({code, title, description, slug}: PostProps) => {
             </Heading>
             <Heading size="md">{description}</Heading>
           </Box>
-          <Component />
+          <Component components={{p: Paragraph}} />
           {/* {post_items.length > 0 &&
                   post_items.map((item: any, idx: number) => (
                     <PostContent key={item} itemId={item} />

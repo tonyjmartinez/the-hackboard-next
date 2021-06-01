@@ -81,17 +81,24 @@ const Index = ({localPosts}) => {
   // const posts = data?.posts
 
   const [sm, md, lg] = useMediaQuery([
-    '(min-width: 0em)',
     '(min-width: 30em)',
-    '(min-width: 80em)',
+    '(min-width: 48em)',
+    '(min-width: 62em)',
   ])
 
   const parentRef = useRef()
 
+  let rowSize = 300
+  if (lg) {
+    rowSize = 400
+  } else if (md) {
+    rowSize = 350
+  }
+
   const rowVirtualizer = useVirtual({
     size: localPosts.length,
     parentRef,
-    estimateSize: useCallback(() => 350, []),
+    estimateSize: useCallback(() => rowSize, [rowSize]),
   })
 
   // if (isFetching || !data || !(data?.posts.length > 0)) {
@@ -105,7 +112,7 @@ const Index = ({localPosts}) => {
     return (
       <Box key={slug}>
         <Center h="100%">
-          <Box w={['90%', '50%', '25%']} margin="0px auto">
+          <Box w={['90%', '70%', '40%']} margin="0px auto">
             <Card
               title={title}
               subtitle={description}

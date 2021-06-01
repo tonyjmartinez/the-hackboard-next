@@ -98,14 +98,14 @@ const Index = ({localPosts}) => {
   //   return <Skeleton />
   // }
 
-  const Row = ({index, style}: any) => {
+  const Row = ({index}: any) => {
     if (!localPosts || !localPosts[index]) return null
     const {title, description, publishedAt, slug} = localPosts[index]
 
     return (
-      <Box sx={{...style}} key={slug}>
+      <Box key={slug}>
         <Center h="100%">
-          <Box w={['90%', '70%', '40%']} margin="0px auto">
+          <Box w={['90%', '50%', '25%']} margin="0px auto">
             <Card
               title={title}
               subtitle={description}
@@ -126,6 +126,7 @@ const Index = ({localPosts}) => {
       h={`${rowVirtualizer.totalSize}px`}
       width="100%"
       position="relative"
+      mt={10}
     >
       {rowVirtualizer.virtualItems.map(virtualRow => (
         <Box

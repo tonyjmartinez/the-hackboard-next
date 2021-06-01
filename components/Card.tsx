@@ -1,5 +1,5 @@
 import React from 'react'
-import {Box, AspectRatio, Badge, BoxProps} from '@chakra-ui/react'
+import {Box, Center, AspectRatio, Badge, BoxProps} from '@chakra-ui/react'
 import Link from 'next/link'
 import moment from 'moment'
 import Image from 'next/image'
@@ -24,20 +24,23 @@ const Card = ({
     <Link href={linkUrl}>
       <Box
         w="90%"
+        h="80%"
         m="auto"
         borderWidth="1px"
         borderRadius="lg"
         overflow="hidden"
         cursor="pointer"
       >
-        <AspectRatio ratio={16 / 9}>
-          <Image
-            src={imageUrl}
-            alt={'post image'}
-            layout="fill"
-            objectFit="cover"
-          />
-        </AspectRatio>
+        <Center pt={3}>
+          <AspectRatio ratio={16 / 9} w="80%">
+            <Image
+              src={imageUrl}
+              alt={'post image'}
+              layout="fill"
+              objectFit="cover"
+            />
+          </AspectRatio>
+        </Center>
 
         <Box p="6">
           <Box d="flex" alignItems="baseline">

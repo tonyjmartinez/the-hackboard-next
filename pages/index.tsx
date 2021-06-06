@@ -4,6 +4,7 @@ import {graphqlRequest} from 'util/ReactQueryProvider'
 import {Box, useMediaQuery, Center} from '@chakra-ui/react'
 import Skeleton from 'components/Skeleton'
 import Card from 'components/Card'
+import PostCard from 'components/PostCard'
 import React, {useRef, useCallback} from 'react'
 import {useVirtual} from 'react-virtual'
 import fs from 'fs'
@@ -11,6 +12,7 @@ import path from 'path'
 import {bundleMDX} from 'mdx-bundler'
 import {mdxFiles} from './posts/[slug]'
 import R from 'ramda'
+import {useColors} from 'util/color-context'
 
 const {readdir, readFile} = fs.promises
 
@@ -88,11 +90,13 @@ const Index = ({localPosts}) => {
 
   const parentRef = useRef()
 
-  let rowSize = 300
+  let rowSize = 375
   if (lg) {
-    rowSize = 400
+    rowSize = 475
   } else if (md) {
-    rowSize = 350
+    rowSize = 425
+  } else if (sm) {
+    rowSize = 375
   }
 
   const rowVirtualizer = useVirtual({
@@ -101,68 +105,59 @@ const Index = ({localPosts}) => {
     estimateSize: useCallback(() => rowSize, [rowSize]),
   })
 
-  // if (isFetching || !data || !(data?.posts.length > 0)) {
-  //   return <Skeleton />
-  // }
-
   const Row = ({index}: any) => {
     if (!localPosts || !localPosts[index]) return null
     const {title, description, publishedAt, slug, image} = localPosts[index]
 
     return (
-      <Box key={slug}>
-        <Center h="100%">
-          <Box w={['90%', '70%', '40%']} margin="0px auto">
-            <Card
+      <Center h="100%" key={slug}>
+        <PostCard
+          image={image ?? null}
+          title={title}
+          description={description}
+          publishedAt={publishedAt}
+          slug={slug}
+        />
+        {/* <Card
               title={title}
               subtitle={description}
               createdAt={publishedAt}
               imageUrl={image ? image : undefined}
               // linkUrl={`/posts/${id}`}
               linkUrl={`/posts/${slug}`}
-            />
-          </Box>
-        </Center>
-      </Box>
+            /> */}
+      </Center>
     )
   }
 
   return (
-    <Box
-      ref={parentRef}
-      h={`${rowVirtualizer.totalSize}px`}
-      width="100%"
-      position="relative"
-      mt={10}
-    >
-      {rowVirtualizer.virtualItems.map(virtualRow => (
+    <Center w="100%">
+      <Box maxW="1100px" w="100%" mx={3}>
         <Box
-          key={virtualRow.index}
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: `${virtualRow.size}px`,
-            transform: `translateY(${virtualRow.start}px)`,
-          }}
+          ref={parentRef}
+          h={`${rowVirtualizer.totalSize}px`}
+          width="100%"
+          position="relative"
+          mt={20}
         >
-          <Row index={virtualRow.index} />
+          {rowVirtualizer.virtualItems.map(virtualRow => (
+            <Box
+              key={virtualRow.index}
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: `${virtualRow.size}px`,
+                transform: `translateY(${virtualRow.start}px)`,
+              }}
+            >
+              <Row index={virtualRow.index} />
+            </Box>
+          ))}
         </Box>
-      ))}
-      {/* <AutoSizer>
-        {({height, width}) => (
-          <List
-            height={height}
-            itemCount={posts.length}
-            itemSize={cardHeight}
-            width={width}
-          >
-            {Row}
-          </List>
-        )}
-      </AutoSizer> */}
-    </Box>
+      </Box>
+    </Center>
   )
 }
 

@@ -19,6 +19,7 @@ import {FiSun, FiMoon, FiPlusCircle} from 'react-icons/fi'
 import Link from 'next/link'
 import {useRouter} from 'next/router'
 import {useUser} from '@auth0/nextjs-auth0'
+import {useColors} from 'util/color-context'
 
 export interface NavProps extends BoxProps {
   children: ReactNode
@@ -28,20 +29,17 @@ const Nav = ({children, ...rest}: NavProps) => {
   const router = useRouter()
   const {colorMode, toggleColorMode} = useColorMode()
   const {user, error, isLoading} = useUser()
+  const colors = useColors()
+  const {gray} = colors
 
   const isLight = colorMode === 'light'
-
-  const theme = useTheme()
-
-  const buttonIconColor = useColorModeValue('cyan', 'teal')
-  const iconColor = useColorModeValue('white', theme.colors.blue[800])
 
   return (
     <>
       <Portal>
         <Flex w="100%" pos="fixed" top={0} {...rest}>
-          <Box bg="gray.600" opacity="0.8">
-            <Heading size="md" p={3} color="white">
+          <Box bg={gray} opacity="0.8">
+            <Heading size="md" p={3}>
               <Link href="/">The Hackboard</Link>
             </Heading>
           </Box>
@@ -50,7 +48,7 @@ const Nav = ({children, ...rest}: NavProps) => {
       <Portal>
         <Flex w="100%" pos="fixed" bottom="0" {...rest}>
           <Spacer />
-          <Box px={2} bg="gray.600" opacity="0.8" mr={6}>
+          <Box px={2} bg={gray} opacity="0.8" mr={6}>
             {user ? (
               <>
                 <Tooltip label="New Post">

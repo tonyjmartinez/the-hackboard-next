@@ -107,7 +107,7 @@ const Index = ({localPosts}) => {
 
   const Row = ({index}: any) => {
     if (!localPosts || !localPosts[index]) return null
-    const {title, description, publishedAt, slug} = localPosts[index]
+    const {title, description, publishedAt, slug, image} = localPosts[index]
 
     return (
       <Box key={slug}>
@@ -117,7 +117,7 @@ const Index = ({localPosts}) => {
               title={title}
               subtitle={description}
               createdAt={publishedAt}
-              // imageUrl={image ? image : undefined}
+              imageUrl={image ? image : undefined}
               // linkUrl={`/posts/${id}`}
               linkUrl={`/posts/${slug}`}
             />

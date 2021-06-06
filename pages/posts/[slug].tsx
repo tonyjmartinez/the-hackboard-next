@@ -28,7 +28,6 @@ import R from 'ramda'
 const {readdir, readFile} = fs.promises
 
 const Paragraph = ({children}) => {
-  console.log('para')
   return (
     <Text color="tomato" size="xl">
       {children}
@@ -58,6 +57,7 @@ export const serialize = ({
   code,
   publishedAt,
   modifiedAt,
+  image
 }) => {
   return {
     slug,
@@ -66,6 +66,7 @@ export const serialize = ({
     description,
     publishedAt: JSON.parse(JSON.stringify(publishedAt)),
     modifiedAt: JSON.parse(JSON.stringify(modifiedAt)),
+    image: image ?? null
   }
 }
 
@@ -164,9 +165,10 @@ export interface PostProps {
   slug: string
   title: string
   description: string
+  image: string
 }
 
-const Post = ({code, title, description, slug}: PostProps) => {
+const Post = ({code, title, description, slug, image}: PostProps) => {
   // const router = useRouter()
   // const {id} = router.query
   // // TODO: create post type
@@ -203,13 +205,13 @@ const Post = ({code, title, description, slug}: PostProps) => {
       <Box key={slug} m="auto" mt={20} textAlign="left">
         <VStack spacing={7} align="start">
           <Box w="100%" textAlign="center">
-            {/* {image && (
+            {image && (
               <Center w="100%">
                 <AspectRatio ratio={16 / 9} w={['80%', '80%', '60%']}>
                   <Image src={image} layout="fill" objectFit="cover" />
                 </AspectRatio>
               </Center>
-            )} */}
+            )}
             <Heading size="2xl" mb={6}>
               {title}
             </Heading>

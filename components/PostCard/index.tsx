@@ -64,7 +64,9 @@ const PostCard = ({
             <LinkOverlay>{title}</LinkOverlay>
           </NextLink>
         </Heading>
-        <Text mb="3">{description}</Text>
+        <Text mb="3" noOfLines={2} h="50px">
+          {description}
+        </Text>
         <NextLink href={href} passHref>
           <Box as="a" color="teal.400" fontWeight="bold">
             Read more

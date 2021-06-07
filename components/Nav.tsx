@@ -30,7 +30,7 @@ const Nav = ({children, ...rest}: NavProps) => {
   const {colorMode, toggleColorMode} = useColorMode()
   const {user, error, isLoading} = useUser()
   const colors = useColors()
-  const {gray} = colors
+  const {gray, teal} = colors
 
   const isLight = colorMode === 'light'
 

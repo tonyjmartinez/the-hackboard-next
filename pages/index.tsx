@@ -90,14 +90,15 @@ const Index = ({localPosts}) => {
 
   const parentRef = useRef()
 
-  let rowSize = 375
+  let rowSize = 400
   if (lg) {
     rowSize = 475
   } else if (md) {
-    rowSize = 425
+    rowSize = 475
   } else if (sm) {
-    rowSize = 375
+    rowSize = 450
   }
+  console.log('sm', sm, 'md', md, 'lg', lg)
 
   const rowVirtualizer = useVirtual({
     size: localPosts.length,
@@ -118,14 +119,6 @@ const Index = ({localPosts}) => {
           publishedAt={publishedAt}
           slug={slug}
         />
-        {/* <Card
-              title={title}
-              subtitle={description}
-              createdAt={publishedAt}
-              imageUrl={image ? image : undefined}
-              // linkUrl={`/posts/${id}`}
-              linkUrl={`/posts/${slug}`}
-            /> */}
       </Center>
     )
   }

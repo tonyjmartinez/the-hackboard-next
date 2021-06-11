@@ -17,6 +17,7 @@ class MyDocument extends Document {
             name="viewport"
             content="initial-scale=1.0, width=device-width"
           />
+          <meta name="description" content="The Hackboard - An MDX Blog" />
         </Head>
         <body>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />

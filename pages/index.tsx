@@ -22,7 +22,7 @@ const getPosts = `
       id
       post_items
       title
-      subtitle
+      description
       published_at
       image
       is_public
@@ -32,7 +32,7 @@ const getPosts = `
 
 export interface ItemType {
   title: string
-  subtitle: string
+  description: string
   id?: number
   published_at?: any
   image?: string

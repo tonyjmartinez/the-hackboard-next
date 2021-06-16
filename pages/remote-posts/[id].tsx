@@ -26,7 +26,7 @@ const getPost = `
       id
       post_items
       published_at
-      subtitle
+      description
       title
       image
     }
@@ -107,7 +107,7 @@ const Post = ({mdxContent}: PostProps) => {
   return (
     <Box maxW="675px" m="auto">
       {data?.posts?.map(
-        ({title, subtitle, post_items, image}: any, idx: number) => {
+        ({title, description, post_items, image}: any, idx: number) => {
           return (
             <Box key={idx} m="auto" mt={20} textAlign="left">
               <VStack spacing={7} align="start">
@@ -122,7 +122,7 @@ const Post = ({mdxContent}: PostProps) => {
                   <Heading size="2xl" mb={6}>
                     {title}
                   </Heading>
-                  <Heading size="md">{subtitle}</Heading>
+                  <Heading size="md">{description}</Heading>
                 </Box>
                 <Component />
                 {/* {post_items.length > 0 &&

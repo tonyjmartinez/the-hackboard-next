@@ -25,7 +25,7 @@ const getPost = `
     posts(where: {id: {_eq: $id}}) {
       id
       post_items
-      created_at
+      published_at
       subtitle
       title
       image

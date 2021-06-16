@@ -23,7 +23,7 @@ const getPosts = `
       post_items
       title
       subtitle
-      created_at
+      published_at
       image
       is_public
     }
@@ -34,7 +34,7 @@ export interface ItemType {
   title: string
   subtitle: string
   id?: number
-  created_at?: any
+  published_at?: any
   image?: string
 }
 

@@ -43,9 +43,9 @@ interface PostsType {
 }
 
 export async function getStaticProps() {
-  const queryClient = new QueryClient()
+  // const queryClient = new QueryClient()
 
-  await queryClient.prefetchQuery('posts', graphqlRequest(getPosts))
+  // await queryClient.prefetchQuery('posts', graphqlRequest(getPosts))
   // const files = await readdir(path.join(__dirname, '/posts/'))
   const files = await readdir('mdx/')
   const promises = files.map(async file => {
@@ -65,7 +65,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
+      // dehydratedState: dehydrate(queryClient),
       localPosts: sorted,
     },
   }

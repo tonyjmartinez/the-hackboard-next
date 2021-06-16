@@ -30,7 +30,7 @@ const Nav = ({children, ...rest}: NavProps) => {
   const {colorMode, toggleColorMode} = useColorMode()
   const {user, error, isLoading} = useUser()
   const colors = useColors()
-  const {gray, teal} = colors
+  const {gray, teal, altText} = colors
 
   const isLight = colorMode === 'light'
 
@@ -43,6 +43,9 @@ const Nav = ({children, ...rest}: NavProps) => {
               <Link href="/">The Hackboard</Link>
             </Heading>
           </Box>
+          <Heading size="md" p={3} bg={teal} color={altText}>
+            <Link href="/board">Board</Link>
+          </Heading>
         </Flex>
       </Portal>
       <Portal>

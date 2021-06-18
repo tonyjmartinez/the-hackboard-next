@@ -7,19 +7,14 @@ import Card from 'components/Card'
 import PostCard from 'components/PostCard'
 import React, {useRef, useCallback} from 'react'
 import {useVirtual} from 'react-virtual'
-import fs from 'fs'
-import path from 'path'
-import {bundleMDX} from 'mdx-bundler'
-import {mdxFiles} from './posts/[slug]'
 import R from 'ramda'
 import {useColors} from 'util/color-context'
 
-const {readdir, readFile} = fs.promises
-
 const getPosts = `
   query MyQuery @cached {
-    posts(order_by: {created_at: desc}) {
+    posts(order_by: {published_at: desc}) {
       id
+      slug
       post_items
       title
       description
@@ -34,6 +29,7 @@ export interface ItemType {
   title: string
   description: string
   id?: number
+  slug?: string
   published_at?: any
   image?: string
 }
@@ -43,30 +39,29 @@ interface PostsType {
 }
 
 export async function getStaticProps() {
-  // const queryClient = new QueryClient()
+  const queryClient = new QueryClient()
 
-  // await queryClient.prefetchQuery('posts', graphqlRequest(getPosts))
+  await queryClient.prefetchQuery('posts', graphqlRequest(getPosts))
   // const files = await readdir(path.join(__dirname, '/posts/'))
-  const files = await readdir('mdx/')
-  const promises = files.map(async file => {
-    const fileRes = await readFile(path.join('mdx/', file))
-    const result = await bundleMDX(fileRes.toString().trim(), mdxFiles)
-    const {frontmatter} = result
-    const {publishedAt, modifiedAt} = frontmatter
-    frontmatter.publishedAt = JSON.parse(JSON.stringify(publishedAt))
-    frontmatter.modifiedAt = JSON.parse(JSON.stringify(modifiedAt))
+  // const files = await readdir('mdx/')
+  // const promises = files.map(async file => {
+  //   const fileRes = await readFile(path.join('mdx/', file))
+  //   const result = await bundleMDX(fileRes.toString().trim(), mdxFiles)
+  //   const {frontmatter} = result
+  //   const {publishedAt, modifiedAt} = frontmatter
+  //   frontmatter.publishedAt = JSON.parse(JSON.stringify(publishedAt))
+  //   frontmatter.modifiedAt = JSON.parse(JSON.stringify(modifiedAt))
 
-    return {file, ...frontmatter}
-  })
+  //   return {file, ...frontmatter}
+  // })
 
-  const result = await Promise.all([...promises])
-  const publishedDesc = (a, b) => b.publishedAt - a.publishedAt
-  const sorted = R.sort(publishedDesc, result)
+  // const result = await Promise.all([...promises])
+  // const publishedDesc = (a, b) => b.publishedAt - a.publishedAt
+  // const sorted = R.sort(publishedDesc, result)
 
   return {
     props: {
-      // dehydratedState: dehydrate(queryClient),
-      localPosts: sorted,
+      dehydratedState: dehydrate(queryClient),
     },
   }
 }
@@ -75,21 +70,18 @@ export interface IndexProps {
   localPosts: any[]
 }
 const Index = ({localPosts}) => {
-  // const {status, data, error, isFetching} = useQuery<PostsType | undefined>(
-  //   'posts',
-  //   graphqlRequest(getPosts),
-  // )
+  const {status, data, error, isFetching} = useQuery<PostsType | undefined>(
+    'posts',
+    graphqlRequest(getPosts),
+  )
 
-  // const posts = data?.posts
+  console.log('data?', data)
 
   const [sm, md, lg] = useMediaQuery([
     '(min-width: 30em)',
     '(min-width: 48em)',
     '(min-width: 62em)',
   ])
-
-  const parentRef = useRef()
-
   let rowSize = 400
   if (lg) {
     rowSize = 475
@@ -100,15 +92,21 @@ const Index = ({localPosts}) => {
   }
   console.log('sm', sm, 'md', md, 'lg', lg)
 
+  const parentRef = useRef()
+  const posts = data?.posts
   const rowVirtualizer = useVirtual({
-    size: localPosts.length,
+    size: posts.length,
     parentRef,
     estimateSize: useCallback(() => rowSize, [rowSize]),
   })
 
+  if (isFetching || !data || !(data?.posts.length > 0)) {
+    return <Skeleton />
+  }
+
   const Row = ({index}: any) => {
-    if (!localPosts || !localPosts[index]) return null
-    const {title, description, publishedAt, slug, image} = localPosts[index]
+    if (!posts || !posts[index]) return null
+    const {title, description, publishedAt, slug, image} = posts[index]
 
     return (
       <Center h="100%" key={slug}>

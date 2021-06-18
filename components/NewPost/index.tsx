@@ -228,7 +228,7 @@ const NewPost = () => {
       subtitle,
       // user_id: user.sub,
       post_items: postItemIds,
-      created_at: moment(),
+      published_at: moment(),
       image: url,
       is_public: radioValue === 'true',
     })

@@ -57,7 +57,7 @@ export const serialize = ({
   code,
   publishedAt,
   modifiedAt,
-  image
+  image,
 }) => {
   return {
     slug,
@@ -66,7 +66,7 @@ export const serialize = ({
     description,
     publishedAt: JSON.parse(JSON.stringify(publishedAt)),
     modifiedAt: JSON.parse(JSON.stringify(modifiedAt)),
-    image: image ?? null
+    image: image ?? null,
   }
 }
 
